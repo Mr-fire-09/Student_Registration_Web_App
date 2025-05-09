@@ -13,41 +13,107 @@
         h1 {
             text-align: center;
             color: #222;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            text-align: center;
+            color: #444;
+            margin-top: 2rem;
+            font-size: 1.8rem;
         }
         form {
             background: #fff;
             max-width: 400px;
             margin: auto;
-            padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        form:hover {
+            transform: scale(1.02);
         }
         input, select {
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.8rem;
             margin: 0.5rem 0;
-            border-radius: 6px;
+            border-radius: 10px;
             border: 1px solid #ccc;
+            font-size: 1rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input:focus, select:focus {
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            outline: none;
         }
         button {
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.8rem;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 10px;
             cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
         }
         table {
             margin-top: 2rem;
             width: 100%;
             border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
         th, td {
-            padding: 0.8rem;
+            padding: 1rem;
             text-align: left;
             background: #fff;
             border-bottom: 1px solid #ddd;
+            font-size: 1rem;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            padding: 0.5rem 1rem;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 90%;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -56,9 +122,35 @@
     <h1>📘 Student Registration Form</h1>
 
     <form th:action="@{/register}" method="post" th:object="${student}">
-        <input type="text" th:field="*{name}" placeholder="Name" required />
-        <input type="email" th:field="*{email}" placeholder="Email" required />
-        <input type="text" th:field="*{course}" placeholder="Course" required />
+        <div class="form-group">
+            <input type="text" th:field="*{name}" placeholder="Name" required />
+        </div>
+        <div class="form-group">
+            <input type="email" th:field="*{email}" placeholder="Email" required />
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{course}" placeholder="Course" required />
+        </div>
+        <div class="form-group">
+            <input type="tel" th:field="*{phoneNumber}" placeholder="Phone Number" />
+        </div>
+        <div class="form-group">
+            <input type="date" th:field="*{dateOfBirth}" placeholder="Date of Birth" />
+        </div>
+        <div class="form-group">
+            <input type="text" th:field="*{address}" placeholder="Address" />
+        </div>
+        <div class="form-group">
+            <select th:field="*{gender}">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <input type="date" th:field="*{enrollmentDate}" placeholder="Enrollment Date" />
+        </div>
         <button type="submit">Register Student</button>
     </form>
 
@@ -66,18 +158,36 @@
     <table>
         <thead>
             <tr>
-                <th>ID</th><th>Name</th><th>Email</th><th>Course</th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Course</th>
+                <th>Phone</th>
+                <th>DOB</th>
+                <th>Address</th>
+                <th>Gender</th>
+                <th>Enrollment Date</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            <tr th:each="s : ${students}">
+            <tr th:each="s : ${students}" th:if="${s.active}">
                 <td th:text="${s.id}"></td>
                 <td th:text="${s.name}"></td>
                 <td th:text="${s.email}"></td>
                 <td th:text="${s.course}"></td>
+                <td th:text="${s.phoneNumber}"></td>
+                <td th:text="${#temporals.format(s.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                <td th:text="${s.address}"></td>
+                <td th:text="${s.gender}"></td>
+                <td th:text="${#temporals.format(s.enrollmentDate, 'dd-MM-yyyy')}"></td>
+                <td>
+                    <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display: inline;">
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>
-
 </body>
 </html>
