@@ -3,191 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <title>Student Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(to right, #74ebd5, #ACB6E5);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 2rem;
             color: #333;
+            min-height: 100vh;
         }
-        h1 {
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2 {
             text-align: center;
-            color: #222;
-            margin-bottom: 1rem;
+            color: #fff;
+            margin-bottom: 2rem;
             font-size: 2.5rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        h2 {
-            text-align: center;
-            color: #444;
-            margin-top: 2rem;
-            font-size: 1.8rem;
-        }
-        form {
-            background: #fff;
-            max-width: 400px;
-            margin: auto;
-            padding: 2rem;
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            padding: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            margin-bottom: 2rem;
         }
-        form:hover {
-            transform: scale(1.02);
+
+        form {
+            max-width: 500px;
+            margin: auto;
         }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
         input, select {
             width: 100%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            border-radius: 10px;
-            border: 1px solid #ccc;
+            padding: 12px 40px;
+            border: 2px solid #e1e1e1;
+            border-radius: 50px;
             font-size: 1rem;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            transition: all 0.3s ease;
+            background: white;
         }
+
         input:focus, select:focus {
-            border-color: #4CAF50;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
         }
+
         button {
-            width: 100%;
-            padding: 0.8rem;
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            cursor: pointer;
+            padding: 15px 30px;
+            border-radius: 50px;
             font-size: 1.1rem;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-        table {
-            margin-top: 2rem;
-            width: 100%;
-            border-collapse: collapse;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            background: #fff;
-            border-bottom: 1px solid #ddd;
-            font-size: 1rem;
-        }
-        th {
-            background-color: #f2f2f2;
-            color: #333;
-            font-weight: bold;
-        }
-        tr:hover {
-            background-color: #f9f9f9;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        .delete-btn {
-            background-color: #dc3545;
-            padding: 0.5rem 1rem;
-            color: white;
-            border: none;
-            border-radius: 5px;
+            font-weight: 600;
             cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
         }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            font-weight: 500;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:hover {
+            background-color: #f8f9ff;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee0000 100%);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            width: auto;
+        }
+
         .delete-btn:hover {
-            background-color: #c82333;
+            background: linear-gradient(135deg, #ff5252 0%, #d50000 100%);
         }
-        @media (max-width: 600px) {
-            form {
-                width: 90%;
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
             }
-            h1 {
-                font-size: 2rem;
+
+            table {
+                display: block;
+                overflow-x: auto;
             }
-            h2 {
-                font-size: 1.5rem;
+
+            td, th {
+                min-width: 120px;
             }
+        }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .welcome-section h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: -webkit-linear-gradient(#ffffff, #dadada);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .welcome-text {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .divider {
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #666;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .form-group:focus-within .form-label {
+            color: #667eea;
+        }
+
+        .required::after {
+            content: '*';
+            color: #ff5252;
+            margin-left: 4px;
+        }
+
+        .column-icon {
+            margin-right: 8px;
+            color: rgba(255, 255, 255, 0.9);
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <div class="welcome-section">
+            <h1><i class="fas fa-university"></i> Welcome to Student Registration</h1>
+            <div class="divider"></div>
+            <p class="welcome-text">
+                Welcome to our student registration portal. Here you can easily register for your courses 
+                and manage your academic journey. We're committed to making your registration process 
+                smooth and efficient.
+            </p>
+        </div>
 
-    <h1>📘 Student Registration Form</h1>
+        <h1><i class="fas fa-graduation-cap"></i> Student Registration</h1>
 
-    <form th:action="@{/register}" method="post" th:object="${student}">
-        <div class="form-group">
-            <input type="text" th:field="*{name}" placeholder="Name" required />
+        <div class="card">
+            <form th:action="@{/register}" method="post" th:object="${student}">
+                <div class="form-group">
+                    <label class="form-label required">Enter Your Full Name</label>
+                    <i class="fas fa-user"></i>
+                    <input type="text" th:field="*{name}" placeholder="John Doe" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Enter Your Email Address</label>
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" th:field="*{email}" placeholder="john@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Enter Course Name</label>
+                    <i class="fas fa-book"></i>
+                    <input type="text" th:field="*{course}" placeholder="Computer Science" required />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Enter Phone Number</label>
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" th:field="*{phoneNumber}" placeholder="+1 (234) 567-8900" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Date of Birth</label>
+                    <i class="fas fa-calendar"></i>
+                    <input type="date" th:field="*{dateOfBirth}" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Enter Your Address</label>
+                    <i class="fas fa-map-marker-alt"></i>
+                    <input type="text" th:field="*{address}" placeholder="123 Street Name, City, Country" />
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Your Gender</label>
+                    <i class="fas fa-venus-mars"></i>
+                    <select th:field="*{gender}">
+                        <option value="">Choose gender...</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Enrollment Date</label>
+                    <i class="fas fa-calendar-check"></i>
+                    <input type="date" th:field="*{enrollmentDate}" />
+                </div>
+                <button type="submit"><i class="fas fa-user-plus"></i> Register Student</button>
+            </form>
         </div>
-        <div class="form-group">
-            <input type="email" th:field="*{email}" placeholder="Email" required />
-        </div>
-        <div class="form-group">
-            <input type="text" th:field="*{course}" placeholder="Course" required />
-        </div>
-        <div class="form-group">
-            <input type="tel" th:field="*{phoneNumber}" placeholder="Phone Number" />
-        </div>
-        <div class="form-group">
-            <input type="date" th:field="*{dateOfBirth}" placeholder="Date of Birth" />
-        </div>
-        <div class="form-group">
-            <input type="text" th:field="*{address}" placeholder="Address" />
-        </div>
-        <div class="form-group">
-            <select th:field="*{gender}">
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input type="date" th:field="*{enrollmentDate}" placeholder="Enrollment Date" />
-        </div>
-        <button type="submit">Register Student</button>
-    </form>
 
-    <h2>📋 Registered Students</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Course</th>
-                <th>Phone</th>
-                <th>DOB</th>
-                <th>Address</th>
-                <th>Gender</th>
-                <th>Enrollment Date</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="s : ${students}" th:if="${s.active}">
-                <td th:text="${s.id}"></td>
-                <td th:text="${s.name}"></td>
-                <td th:text="${s.email}"></td>
-                <td th:text="${s.course}"></td>
-                <td th:text="${s.phoneNumber}"></td>
-                <td th:text="${#temporals.format(s.dateOfBirth, 'dd-MM-yyyy')}"></td>
-                <td th:text="${s.address}"></td>
-                <td th:text="${s.gender}"></td>
-                <td th:text="${#temporals.format(s.enrollmentDate, 'dd-MM-yyyy')}"></td>
-                <td>
-                    <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display: inline;">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+        <h2><i class="fas fa-list"></i> Registered Students</h2>
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th><i class="fas fa-id-badge column-icon"></i>ID</th>
+                        <th><i class="fas fa-user column-icon"></i>Name</th>
+                        <th><i class="fas fa-envelope column-icon"></i>Email</th>
+                        <th><i class="fas fa-book column-icon"></i>Course</th>
+                        <th><i class="fas fa-phone column-icon"></i>Phone</th>
+                        <th><i class="fas fa-birthday-cake column-icon"></i>DOB</th>
+                        <th><i class="fas fa-map-marker-alt column-icon"></i>Address</th>
+                        <th><i class="fas fa-venus-mars column-icon"></i>Gender</th>
+                        <th><i class="fas fa-calendar-check column-icon"></i>Enrollment</th>
+                        <th><i class="fas fa-cogs column-icon"></i>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="s : ${students}" th:if="${s.active}">
+                        <td th:text="${s.id}"></td>
+                        <td th:text="${s.name}"></td>
+                        <td th:text="${s.email}"></td>
+                        <td th:text="${s.course}"></td>
+                        <td th:text="${s.phoneNumber}"></td>
+                        <td th:text="${#temporals.format(s.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                        <td th:text="${s.address}"></td>
+                        <td th:text="${s.gender}"></td>
+                        <td th:text="${#temporals.format(s.enrollmentDate, 'dd-MM-yyyy')}"></td>
+                        <td>
+                            <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="delete-btn">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
 </html>
