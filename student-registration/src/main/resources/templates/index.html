@@ -1,21 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        /* Base styles */
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             padding: 2rem;
             color: #333;
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        
+
         .container {
             max-width: 1200px;
+            width: 100%;
             margin: 0 auto;
         }
 
@@ -27,6 +34,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
+        /* Card styling */
         .card {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(10px);
@@ -34,8 +42,10 @@
             padding: 2rem;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
             margin-bottom: 2rem;
+            animation: fadeIn 0.5s ease-out; /* Animation for card appearance */
         }
 
+        /* Form styling */
         form {
             max-width: 500px;
             margin: auto;
@@ -52,6 +62,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #666;
+            transition: color 0.3s ease;
         }
 
         input, select {
@@ -67,8 +78,27 @@
         input:focus, select:focus {
             border-color: #667eea;
             box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
+            outline: none; /* Remove default outline */
         }
 
+        /* Validation feedback */
+        input.is-invalid, select.is-invalid {
+            border-color: #ff5252;
+        }
+
+        input.is-valid, select.is-valid {
+            border-color: #28a745;
+        }
+
+        .error-message {
+            color: #ff5252;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            margin-left: 40px; /* Align with input text */
+            display: none; /* Hidden by default */
+        }
+
+        /* Button styling */
         button {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -80,6 +110,10 @@
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
         button:hover {
@@ -87,12 +121,19 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.2);
         }
 
+        button:focus {
+            outline: 3px solid rgba(102, 126, 234, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* Table styling */
         table {
             width: 100%;
             background: white;
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border-collapse: collapse; /* Ensure borders collapse properly */
         }
 
         th {
@@ -100,15 +141,24 @@
             color: white;
             padding: 15px;
             font-weight: 500;
+            text-align: left; /* Align text to left */
         }
 
         td {
             padding: 15px;
             border-bottom: 1px solid #eee;
+            text-align: left; /* Align text to left */
         }
 
-        tr:hover {
-            background-color: #f8f9ff;
+        /* Zebra striping */
+        table tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* A very light grey for even rows */
+        }
+
+        table tbody tr:hover {
+            background-color: #f0f3ff; /* Lighter hover than current for contrast */
+            transform: scale(1.005); /* Subtle hover effect */
+            transition: background-color 0.2s ease, transform 0.2s ease;
         }
 
         .delete-btn {
@@ -117,25 +167,55 @@
             border-radius: 25px;
             font-size: 0.9rem;
             width: auto;
+            display: inline-flex; /* Use flex for icon alignment */
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
 
         .delete-btn:hover {
             background: linear-gradient(135deg, #ff5252 0%, #d50000 100%);
+            transform: translateY(-1px); /* Less aggressive hover for small buttons */
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
-            .container {
+            body {
                 padding: 1rem;
             }
-
+            .container {
+                padding: 0; /* Remove padding for container on small screens */
+            }
+            .card {
+                padding: 1.5rem;
+                margin-left: 1rem;
+                margin-right: 1rem;
+            }
+            h1, h2 {
+                font-size: 2rem;
+            }
+            input, select {
+                padding: 10px 35px;
+            }
+            button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
             table {
                 display: block;
-                overflow-x: auto;
+                overflow-x: auto; /* Enable horizontal scrolling for table */
+                white-space: nowrap; /* Prevent text wrapping in cells */
             }
-
             td, th {
-                min-width: 120px;
+                min-width: 100px; /* Adjust min-width for better display */
+                box-sizing: border-box; /* Include padding in width */
+            }
+            .welcome-section h1 {
+                font-size: 2.5rem;
+            }
+            .welcome-text {
+                font-size: 1rem;
             }
         }
 
@@ -143,10 +223,6 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        .card {
-            animation: fadeIn 0.5s ease-out;
         }
 
         .welcome-section {
@@ -187,6 +263,7 @@
             font-weight: 500;
             font-size: 0.9rem;
             transition: color 0.3s ease;
+            margin-left: 40px; /* Align with input text */
         }
 
         .form-group:focus-within .form-label {
@@ -199,9 +276,22 @@
             margin-left: 4px;
         }
 
+        /* Enhanced required asterisk color on focus */
+        .form-group:focus-within .form-label.required::after {
+            color: #667eea; /* Matches the input border color on focus */
+        }
+
         .column-icon {
             margin-right: 8px;
-            color: rgba(255, 255, 255, 0.9);
+            color: white; /* Changed to white for better contrast on gradient header */
+        }
+
+        /* Message for no students */
+        .no-students-message {
+            text-align: center;
+            color: #666;
+            padding: 1rem;
+            font-size: 1.1rem;
         }
     </style>
 </head>
@@ -220,41 +310,44 @@
         <h1><i class="fas fa-graduation-cap"></i> Student Registration</h1>
 
         <div class="card">
-            <form th:action="@{/register}" method="post" th:object="${student}">
+            <form id="studentRegistrationForm">
                 <div class="form-group">
-                    <label class="form-label required">Enter Your Full Name</label>
+                    <label for="name" class="form-label required">Enter Your Full Name</label>
                     <i class="fas fa-user"></i>
-                    <input type="text" th:field="*{name}" placeholder="John Doe" required />
+                    <input type="text" id="name" name="name" placeholder="John Doe" required />
+                    <span class="error-message" id="name-error">Please enter your full name.</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label required">Enter Your Email Address</label>
+                    <label for="email" class="form-label required">Enter Your Email Address</label>
                     <i class="fas fa-envelope"></i>
-                    <input type="email" th:field="*{email}" placeholder="john@example.com" required />
+                    <input type="email" id="email" name="email" placeholder="john@example.com" required />
+                    <span class="error-message" id="email-error">Please enter a valid email address.</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label required">Enter Course Name</label>
+                    <label for="course" class="form-label required">Enter Course Name</label>
                     <i class="fas fa-book"></i>
-                    <input type="text" th:field="*{course}" placeholder="Computer Science" required />
+                    <input type="text" id="course" name="course" placeholder="Computer Science" required />
+                    <span class="error-message" id="course-error">Please enter the course name.</span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Enter Phone Number</label>
+                    <label for="phoneNumber" class="form-label">Enter Phone Number</label>
                     <i class="fas fa-phone"></i>
-                    <input type="tel" th:field="*{phoneNumber}" placeholder="+1 (234) 567-8900" />
+                    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="+1 (234) 567-8900" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Select Date of Birth</label>
+                    <label for="dateOfBirth" class="form-label">Select Date of Birth</label>
                     <i class="fas fa-calendar"></i>
-                    <input type="date" th:field="*{dateOfBirth}" />
+                    <input type="date" id="dateOfBirth" name="dateOfBirth" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Enter Your Address</label>
+                    <label for="address" class="form-label">Enter Your Address</label>
                     <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" th:field="*{address}" placeholder="123 Street Name, City, Country" />
+                    <input type="text" id="address" name="address" placeholder="123 Street Name, City, Country" />
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Select Your Gender</label>
+                    <label for="gender" class="form-label">Select Your Gender</label>
                     <i class="fas fa-venus-mars"></i>
-                    <select th:field="*{gender}">
+                    <select id="gender" name="gender">
                         <option value="">Choose gender...</option>
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
@@ -262,9 +355,9 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Select Enrollment Date</label>
+                    <label for="enrollmentDate" class="form-label">Select Enrollment Date</label>
                     <i class="fas fa-calendar-check"></i>
-                    <input type="date" th:field="*{enrollmentDate}" />
+                    <input type="date" id="enrollmentDate" name="enrollmentDate" />
                 </div>
                 <button type="submit"><i class="fas fa-user-plus"></i> Register Student</button>
             </form>
@@ -272,41 +365,207 @@
 
         <h2><i class="fas fa-list"></i> Registered Students</h2>
         <div class="card">
-            <table>
-                <thead>
-                    <tr>
-                        <th><i class="fas fa-id-badge column-icon"></i>ID</th>
-                        <th><i class="fas fa-user column-icon"></i>Name</th>
-                        <th><i class="fas fa-envelope column-icon"></i>Email</th>
-                        <th><i class="fas fa-book column-icon"></i>Course</th>
-                        <th><i class="fas fa-phone column-icon"></i>Phone</th>
-                        <th><i class="fas fa-birthday-cake column-icon"></i>DOB</th>
-                        <th><i class="fas fa-map-marker-alt column-icon"></i>Address</th>
-                        <th><i class="fas fa-venus-mars column-icon"></i>Gender</th>
-                        <th><i class="fas fa-calendar-check column-icon"></i>Enrollment</th>
-                        <th><i class="fas fa-cogs column-icon"></i>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="s : ${students}" th:if="${s.active}">
-                        <td th:text="${s.id}"></td>
-                        <td th:text="${s.name}"></td>
-                        <td th:text="${s.email}"></td>
-                        <td th:text="${s.course}"></td>
-                        <td th:text="${s.phoneNumber}"></td>
-                        <td th:text="${#temporals.format(s.dateOfBirth, 'dd-MM-yyyy')}"></td>
-                        <td th:text="${s.address}"></td>
-                        <td th:text="${s.gender}"></td>
-                        <td th:text="${#temporals.format(s.enrollmentDate, 'dd-MM-yyyy')}"></td>
-                        <td>
-                            <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display: inline;">
-                                <button type="submit" class="delete-btn">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div id="studentsTableContainer">
+                <!-- Students table will be rendered here by JavaScript -->
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Student Data (Client-side simulation) ---
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+
+            // --- DOM Elements ---
+            const registrationForm = document.getElementById('studentRegistrationForm');
+            const studentsTableContainer = document.getElementById('studentsTableContainer');
+
+            // --- Input and Error Message Elements for Validation ---
+            const nameInput = document.getElementById('name');
+            const emailInput = document.getElementById('email');
+            const courseInput = document.getElementById('course');
+
+            const nameError = document.getElementById('name-error');
+            const emailError = document.getElementById('email-error');
+            const courseError = document.getElementById('course-error');
+
+            // --- Helper Functions ---
+
+            /**
+             * Renders the students table based on the current 'students' array.
+             */
+            function renderStudentsTable() {
+                if (students.length === 0) {
+                    studentsTableContainer.innerHTML = `
+                        <p class="no-students-message">
+                            <i class="fas fa-info-circle"></i> No students registered yet. Be the first!
+                        </p>
+                    `;
+                    return;
+                }
+
+                let tableHtml = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-id-badge column-icon"></i>ID</th>
+                                <th><i class="fas fa-user column-icon"></i>Name</th>
+                                <th><i class="fas fa-envelope column-icon"></i>Email</th>
+                                <th><i class="fas fa-book column-icon"></i>Course</th>
+                                <th><i class="fas fa-phone column-icon"></i>Phone</th>
+                                <th><i class="fas fa-birthday-cake column-icon"></i>DOB</th>
+                                <th><i class="fas fa-map-marker-alt column-icon"></i>Address</th>
+                                <th><i class="fas fa-venus-mars column-icon"></i>Gender</th>
+                                <th><i class="fas fa-calendar-check column-icon"></i>Enrollment</th>
+                                <th><i class="fas fa-cogs column-icon"></i>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                students.forEach(s => {
+                    // Format dates for display
+                    const dob = s.dateOfBirth ? new Date(s.dateOfBirth).toLocaleDateString('en-GB') : '';
+                    const enrollmentDate = s.enrollmentDate ? new Date(s.enrollmentDate).toLocaleDateString('en-GB') : '';
+
+                    tableHtml += `
+                        <tr>
+                            <td>${s.id}</td>
+                            <td>${s.name}</td>
+                            <td>${s.email}</td>
+                            <td>${s.course}</td>
+                            <td>${s.phoneNumber || ''}</td>
+                            <td>${dob}</td>
+                            <td>${s.address || ''}</td>
+                            <td>${s.gender || ''}</td>
+                            <td>${enrollmentDate}</td>
+                            <td>
+                                <button type="button" class="delete-btn" data-id="${s.id}">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHtml += `
+                        </tbody>
+                    </table>
+                `;
+                studentsTableContainer.innerHTML = tableHtml;
+
+                // Add event listeners to newly created delete buttons
+                document.querySelectorAll('.delete-btn').forEach(button => {
+                    button.addEventListener('click', handleDelete);
+                });
+            }
+
+            /**
+             * Validates a single input field and shows/hides error messages.
+             * @param {HTMLElement} inputElement - The input field to validate.
+             * @param {HTMLElement} errorElement - The corresponding error message span.
+             * @param {RegExp} pattern - Optional regex pattern for validation.
+             * @param {string} message - The error message to display.
+             * @returns {boolean} - True if valid, false otherwise.
+             */
+            function validateInput(inputElement, errorElement, pattern = null, message = '') {
+                const value = inputElement.value.trim();
+                let isValid = true;
+
+                if (inputElement.required && value === '') {
+                    isValid = false;
+                } else if (pattern && value !== '' && !pattern.test(value)) {
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    inputElement.classList.add('is-invalid');
+                    inputElement.classList.remove('is-valid');
+                    errorElement.textContent = message;
+                    errorElement.style.display = 'block';
+                } else {
+                    inputElement.classList.remove('is-invalid');
+                    inputElement.classList.add('is-valid');
+                    errorElement.style.display = 'none';
+                }
+                return isValid;
+            }
+
+            /**
+             * Handles the form submission for adding a new student.
+             * @param {Event} event - The submit event.
+             */
+            function handleFormSubmit(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                // Perform client-side validation for required fields
+                const isNameValid = validateInput(nameInput, nameError, null, 'Please enter your full name.');
+                const isEmailValid = validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.');
+                const isCourseValid = validateInput(courseInput, courseError, null, 'Please enter the course name.');
+
+                if (!isNameValid || !isEmailValid || !isCourseValid) {
+                    // If any required field is invalid, stop here
+                    return;
+                }
+
+                // Collect form data
+                const formData = new FormData(registrationForm);
+                const newStudent = {
+                    id: Date.now().toString(), // Simple unique ID
+                    name: formData.get('name').trim(),
+                    email: formData.get('email').trim(),
+                    course: formData.get('course').trim(),
+                    phoneNumber: formData.get('phoneNumber').trim(),
+                    dateOfBirth: formData.get('dateOfBirth'),
+                    address: formData.get('address').trim(),
+                    gender: formData.get('gender'),
+                    enrollmentDate: formData.get('enrollmentDate'),
+                    active: true // Always active for this client-side example
+                };
+
+                students.push(newStudent);
+                localStorage.setItem('students', JSON.stringify(students)); // Save to local storage
+                registrationForm.reset(); // Clear the form
+                resetValidationStyles(); // Clear validation styles after successful submission
+                renderStudentsTable(); // Re-render the table with the new student
+            }
+
+            /**
+             * Handles the deletion of a student.
+             * @param {Event} event - The click event from the delete button.
+             */
+            function handleDelete(event) {
+                const studentIdToDelete = event.target.dataset.id;
+                if (confirm('Are you sure you want to delete this student? This action cannot be undone.')) {
+                    students = students.filter(s => s.id !== studentIdToDelete);
+                    localStorage.setItem('students', JSON.stringify(students)); // Update local storage
+                    renderStudentsTable(); // Re-render the table
+                }
+            }
+
+            /**
+             * Resets validation styles and hides error messages for all validated inputs.
+             */
+            function resetValidationStyles() {
+                [nameInput, emailInput, courseInput].forEach(input => {
+                    input.classList.remove('is-invalid', 'is-valid');
+                });
+                [nameError, emailError, courseError].forEach(error => {
+                    error.style.display = 'none';
+                });
+            }
+
+            // --- Event Listeners ---
+            registrationForm.addEventListener('submit', handleFormSubmit);
+
+            // Real-time validation on input
+            nameInput.addEventListener('input', () => validateInput(nameInput, nameError, null, 'Please enter your full name.'));
+            emailInput.addEventListener('input', () => validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.'));
+            courseInput.addEventListener('input', () => validateInput(courseInput, courseError, null, 'Please enter the course name.'));
+
+            // Initial render of the table when the page loads
+            renderStudentsTable();
+        });
+    </script>
 </body>
 </html>
