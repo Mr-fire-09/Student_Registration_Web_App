@@ -33,7 +33,10 @@ public class studentcontroller {
 
     @PostMapping("/delete/{id}")
     public String deleteStudent(@PathVariable Long id) {
-        // Handle both soft delete and hard delete based on your requirements
+        // Perform hard delete. If you prefer soft delete, adjust this method accordingly.
+        if (repo.existsById(id)) {
+            repo.deleteById(id);
+        }
         return "redirect:/";
     }
 }
