@@ -3,428 +3,1326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Student Registration Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* Base styles */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --accent: #06b6d4;
+            --accent-light: #22d3ee;
+            --surface: rgba(255, 255, 255, 0.03);
+            --surface-light: rgba(255, 255, 255, 0.06);
+            --surface-border: rgba(255, 255, 255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --bg-dark: #0b0f1a;
+            --bg-card: rgba(15, 23, 42, 0.8);
+            --glow-primary: rgba(99, 102, 241, 0.3);
+            --glow-accent: rgba(6, 182, 212, 0.3);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2rem;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== WELCOME SCREEN ========== */
+        #welcome-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: var(--bg-dark);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .container {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
+        #welcome-screen.hide {
+            opacity: 0;
+            transform: scale(1.1);
+            pointer-events: none;
         }
 
-        h1, h2 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 2rem;
-            font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* Card styling */
-        .card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            margin-bottom: 2rem;
-            animation: fadeIn 0.5s ease-out; /* Animation for card appearance */
-        }
-
-        /* Form styling */
-        form {
-            max-width: 500px;
-            margin: auto;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .form-group i {
+        .welcome-bg {
             position: absolute;
-            left: 15px;
+            inset: 0;
+            overflow: hidden;
+        }
+
+        .welcome-bg .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: orbFloat 8s ease-in-out infinite;
+        }
+
+        .welcome-bg .orb-1 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4), transparent 70%);
+            top: -10%;
+            left: -5%;
+            animation-delay: 0s;
+        }
+
+        .welcome-bg .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.35), transparent 70%);
+            bottom: -10%;
+            right: -5%;
+            animation-delay: -3s;
+        }
+
+        .welcome-bg .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.3), transparent 70%);
             top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-            transition: color 0.3s ease;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -5s;
         }
 
-        input, select {
-            width: 100%;
-            padding: 12px 40px;
-            border: 2px solid #e1e1e1;
-            border-radius: 50px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: white;
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 10px) scale(1.02); }
         }
 
-        input:focus, select:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.3);
-            outline: none; /* Remove default outline */
+        .welcome-bg .orb-3 {
+            animation-name: orbFloatCenter;
         }
 
-        /* Validation feedback */
-        input.is-invalid, select.is-invalid {
-            border-color: #ff5252;
+        @keyframes orbFloatCenter {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            25% { transform: translate(-50%, -55%) scale(1.1); }
+            50% { transform: translate(-45%, -50%) scale(0.95); }
+            75% { transform: translate(-55%, -48%) scale(1.05); }
         }
 
-        input.is-valid, select.is-valid {
-            border-color: #28a745;
+        .particles-canvas {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
         }
 
-        .error-message {
-            color: #ff5252;
-            font-size: 0.85rem;
-            margin-top: 5px;
-            margin-left: 40px; /* Align with input text */
-            display: none; /* Hidden by default */
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 2rem;
         }
 
-        /* Button styling */
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            width: 100%;
+        .welcome-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-
-        button:focus {
-            outline: 3px solid rgba(102, 126, 234, 0.5);
-            outline-offset: 2px;
-        }
-
-        /* Table styling */
-        table {
-            width: 100%;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            border-collapse: collapse; /* Ensure borders collapse properly */
-        }
-
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-size: 3.5rem;
             color: white;
-            padding: 15px;
-            font-weight: 500;
-            text-align: left; /* Align text to left */
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4);
+            animation: iconPulse 3s ease-in-out infinite, iconAppear 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            opacity: 0;
+            transform: scale(0.5) rotate(-10deg);
         }
 
-        td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            text-align: left; /* Align text to left */
+        @keyframes iconAppear {
+            to { opacity: 1; transform: scale(1) rotate(0deg); }
         }
 
-        /* Zebra striping */
-        table tbody tr:nth-child(even) {
-            background-color: #f9f9f9; /* A very light grey for even rows */
+        @keyframes iconPulse {
+            0%, 100% { box-shadow: 0 20px 60px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 20px 80px rgba(99, 102, 241, 0.6), 0 0 40px rgba(6, 182, 212, 0.3); }
         }
 
-        table tbody tr:hover {
-            background-color: #f0f3ff; /* Lighter hover than current for contrast */
-            transform: scale(1.005); /* Subtle hover effect */
-            transition: background-color 0.2s ease, transform 0.2s ease;
+        .welcome-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #c7d2fe 50%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
         }
 
-        .delete-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee0000 100%);
-            padding: 8px 20px;
-            border-radius: 25px;
-            font-size: 0.9rem;
-            width: auto;
-            display: inline-flex; /* Use flex for icon alignment */
+        .welcome-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin: 0 auto 3rem;
+            line-height: 1.7;
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s forwards;
+        }
+
+        .enter-btn {
+            position: relative;
+            display: inline-flex;
             align-items: center;
+            gap: 12px;
+            padding: 18px 48px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.7s forwards;
+        }
+
+        .enter-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .enter-btn:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 16px 48px rgba(99, 102, 241, 0.5);
+        }
+
+        .enter-btn:hover::before {
+            opacity: 1;
+        }
+
+        .enter-btn span, .enter-btn i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .enter-btn .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .enter-btn:hover .arrow-icon {
+            transform: translateX(5px);
+        }
+
+        .enter-btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .welcome-stats {
+            display: flex;
+            gap: 3rem;
             justify-content: center;
-            gap: 5px;
+            margin-top: 4rem;
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s forwards;
         }
 
-        .delete-btn:hover {
-            background: linear-gradient(135deg, #ff5252 0%, #d50000 100%);
-            transform: translateY(-1px); /* Less aggressive hover for small buttons */
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        .stat-item {
+            text-align: center;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 0; /* Remove padding for container on small screens */
-            }
-            .card {
-                padding: 1.5rem;
-                margin-left: 1rem;
-                margin-right: 1rem;
-            }
-            h1, h2 {
-                font-size: 2rem;
-            }
-            input, select {
-                padding: 10px 35px;
-            }
-            button {
-                padding: 12px 20px;
-                font-size: 1rem;
-            }
-            table {
-                display: block;
-                overflow-x: auto; /* Enable horizontal scrolling for table */
-                white-space: nowrap; /* Prevent text wrapping in cells */
-            }
-            td, th {
-                min-width: 100px; /* Adjust min-width for better display */
-                box-sizing: border-box; /* Include padding in width */
-            }
-            .welcome-section h1 {
-                font-size: 2.5rem;
-            }
-            .welcome-text {
-                font-size: 1rem;
-            }
+        .stat-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .welcome-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            color: white;
-            animation: fadeIn 0.8s ease-out;
+        /* ========== MAIN APP ========== */
+        #main-app {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease 0.3s, transform 0.6s ease 0.3s;
+            min-height: 100vh;
+            padding-bottom: 4rem;
         }
 
-        .welcome-section h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: -webkit-linear-gradient(#ffffff, #dadada);
+        #main-app.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .app-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .app-bg .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.5;
+        }
+
+        .app-bg .bg-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: rgba(99, 102, 241, 0.15);
+            top: -200px;
+            right: -100px;
+        }
+
+        .app-bg .bg-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: rgba(6, 182, 212, 0.1);
+            bottom: -200px;
+            left: -100px;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 3rem;
+            background: rgba(11, 15, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--surface-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .nav-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, var(--text-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .welcome-text {
-            font-size: 1.2rem;
-            max-width: 800px;
+        .nav-badge {
+            padding: 6px 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .nav-badge i {
+            color: var(--success);
+            margin-right: 6px;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-container {
+            max-width: 1200px;
             margin: 0 auto;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.9);
+            padding: 3rem 2rem;
         }
 
-        .divider {
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, #ffffff, transparent);
-            margin: 2rem auto;
-            border-radius: 2px;
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header h1 .gradient-text {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* ========== LAYOUT GRID ========== */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* ========== FORM CARD ========== */
+        .form-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            padding: 2rem;
+            position: sticky;
+            top: 100px;
+        }
+
+        .form-card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .form-card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .form-card-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .form-card-header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
-            color: #666;
+            font-size: 0.85rem;
             font-weight: 500;
-            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
             transition: color 0.3s ease;
-            margin-left: 40px; /* Align with input text */
         }
 
-        .form-group:focus-within .form-label {
-            color: #667eea;
-        }
-
-        .required::after {
+        .form-label.required::after {
             content: '*';
-            color: #ff5252;
+            color: var(--danger);
             margin-left: 4px;
         }
 
-        /* Enhanced required asterisk color on focus */
-        .form-group:focus-within .form-label.required::after {
-            color: #667eea; /* Matches the input border color on focus */
+        .input-wrapper {
+            position: relative;
         }
 
-        .column-icon {
-            margin-right: 8px;
-            color: white; /* Changed to white for better contrast on gradient header */
+        .input-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+            z-index: 1;
         }
 
-        /* Message for no students */
-        .no-students-message {
-            text-align: center;
-            color: #666;
-            padding: 1rem;
+        .input-wrapper input,
+        .input-wrapper select {
+            width: 100%;
+            padding: 13px 16px 13px 44px;
+            background: var(--surface);
+            border: 1px solid var(--surface-border);
+            border-radius: 14px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .input-wrapper input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .input-wrapper input:focus,
+        .input-wrapper select:focus {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .input-wrapper:focus-within i {
+            color: var(--primary-light);
+        }
+
+        .input-wrapper select {
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .input-wrapper select option {
+            background: #1e293b;
+            color: var(--text-primary);
+        }
+
+        .input-wrapper input.is-invalid,
+        .input-wrapper select.is-invalid {
+            border-color: var(--danger);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .input-wrapper input.is-valid,
+        .input-wrapper select.is-valid {
+            border-color: var(--success);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.8rem;
+            margin-top: 6px;
+            margin-left: 4px;
+            display: none;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 0.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent), var(--primary-light));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-btn:hover::before {
+            opacity: 1;
+        }
+
+        .submit-btn span, .submit-btn i {
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ========== TABLE SECTION ========== */
+        .table-section {
+            min-width: 0;
+        }
+
+        .table-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--surface-border);
+            border-radius: 24px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .table-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .table-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(6, 182, 212, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
             font-size: 1.1rem;
+        }
+
+        .table-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .table-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .student-count {
+            padding: 6px 14px;
+            background: var(--surface-light);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: var(--surface);
+            border-bottom: 1px solid var(--surface-border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 14px 18px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--surface-border);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: var(--surface-light);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        td:first-child {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+
+        .td-name {
+            color: var(--text-primary) !important;
+            font-weight: 600 !important;
+        }
+
+        .td-email {
+            color: var(--primary-light) !important;
+        }
+
+        .td-course {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            color: var(--primary-light);
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            padding: 8px 16px;
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            width: auto;
+        }
+
+        .delete-btn:hover {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        /* ========== EMPTY STATE ========== */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--surface-light);
+            border: 1px dashed var(--surface-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state h3 {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ========== ANIMATIONS ========== */
+        .animate-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: animateIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .animate-in:nth-child(1) { animation-delay: 0.1s; }
+        .animate-in:nth-child(2) { animation-delay: 0.2s; }
+        .animate-in:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes animateIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Row animation for table */
+        @keyframes rowAppear {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        tbody tr {
+            animation: rowAppear 0.4s ease forwards;
+        }
+
+        tbody tr:nth-child(1) { animation-delay: 0.05s; }
+        tbody tr:nth-child(2) { animation-delay: 0.1s; }
+        tbody tr:nth-child(3) { animation-delay: 0.15s; }
+        tbody tr:nth-child(4) { animation-delay: 0.2s; }
+        tbody tr:nth-child(5) { animation-delay: 0.25s; }
+
+        /* ========== TOAST ========== */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            backdrop-filter: blur(20px);
+            border-radius: 14px;
+            color: var(--success);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 10000;
+            transform: translateX(120%);
+            transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-card {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem 1.5rem;
+            }
+
+            .main-container {
+                padding: 2rem 1rem;
+            }
+
+            .welcome-title {
+                font-size: 2.5rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1rem;
+            }
+
+            .welcome-stats {
+                gap: 1.5rem;
+            }
+
+            .page-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            th, td {
+                padding: 10px 14px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .enter-btn {
+                padding: 15px 36px;
+                font-size: 1rem;
+            }
+
+            .welcome-icon {
+                width: 90px;
+                height: 90px;
+                font-size: 2.5rem;
+                border-radius: 22px;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* ========== SCROLLBAR ========== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--surface-border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="welcome-section">
-            <h1><i class="fas fa-university"></i> Welcome to Student Registration</h1>
-            <div class="divider"></div>
-            <p class="welcome-text">
-                Welcome to our student registration portal. Here you can easily register for your courses 
-                and manage your academic journey. We're committed to making your registration process 
-                smooth and efficient.
-            </p>
+
+    <!-- ========== WELCOME SCREEN ========== -->
+    <div id="welcome-screen">
+        <div class="welcome-bg">
+            <div class="orb orb-1"></div>
+            <div class="orb orb-2"></div>
+            <div class="orb orb-3"></div>
         </div>
+        <canvas class="particles-canvas" id="particlesCanvas"></canvas>
 
-        <h1><i class="fas fa-graduation-cap"></i> Student Registration</h1>
-
-        <div class="card">
-            <form th:action="@{/register}" th:object="${student}" method="post" id="studentRegistrationForm">
-                <div class="form-group">
-                    <label for="name" class="form-label required">Enter Your Full Name</label>
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="name" th:field="*{name}" placeholder="John Doe" required />
-                    <span class="error-message" id="name-error">Please enter your full name.</span>
-                </div>
-                <div class="form-group">
-                    <label for="email" class="form-label required">Enter Your Email Address</label>
-                    <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" th:field="*{email}" placeholder="john@example.com" required />
-                    <span class="error-message" id="email-error">Please enter a valid email address.</span>
-                </div>
-                <div class="form-group">
-                    <label for="course" class="form-label required">Enter Course Name</label>
-                    <i class="fas fa-book"></i>
-                    <input type="text" id="course" th:field="*{course}" placeholder="Computer Science" required />
-                    <span class="error-message" id="course-error">Please enter the course name.</span>
-                </div>
-                <div class="form-group">
-                    <label for="phoneNumber" class="form-label">Enter Phone Number</label>
-                    <i class="fas fa-phone"></i>
-                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" placeholder="+1 (234) 567-8900" />
-                </div>
-                <div class="form-group">
-                    <label for="dateOfBirth" class="form-label">Select Date of Birth</label>
-                    <i class="fas fa-calendar"></i>
-                    <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" />
-                </div>
-                <div class="form-group">
-                    <label for="address" class="form-label">Enter Your Address</label>
-                    <i class="fas fa-map-marker-alt"></i>
-                    <input type="text" id="address" th:field="*{address}" placeholder="123 Street Name, City, Country" />
-                </div>
-                <div class="form-group">
-                    <label for="gender" class="form-label">Select Your Gender</label>
-                    <i class="fas fa-venus-mars"></i>
-                    <select id="gender" th:field="*{gender}">
-                        <option value="">Choose gender...</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="enrollmentDate" class="form-label">Select Enrollment Date</label>
-                    <i class="fas fa-calendar-check"></i>
-                    <input type="date" id="enrollmentDate" th:field="*{enrollmentDate}" />
-                </div>
-                <button type="submit"><i class="fas fa-user-plus"></i> Register Student</button>
-            </form>
-        </div>
-
-        <h2><i class="fas fa-list"></i> Registered Students</h2>
-        <div class="card">
-            <div th:if="${#lists.isEmpty(students)}">
-                <p class="no-students-message">
-                    <i class="fas fa-info-circle"></i> No students registered yet. Be the first!
-                </p>
+        <div class="welcome-content">
+            <div class="welcome-icon">
+                <i class="fas fa-graduation-cap"></i>
             </div>
-            <div th:if="${!#lists.isEmpty(students)}">
-                <table>
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-id-badge column-icon"></i>ID</th>
-                            <th><i class="fas fa-user column-icon"></i>Name</th>
-                            <th><i class="fas fa-envelope column-icon"></i>Email</th>
-                            <th><i class="fas fa-book column-icon"></i>Course</th>
-                            <th><i class="fas fa-phone column-icon"></i>Phone</th>
-                            <th><i class="fas fa-birthday-cake column-icon"></i>DOB</th>
-                            <th><i class="fas fa-map-marker-alt column-icon"></i>Address</th>
-                            <th><i class="fas fa-venus-mars column-icon"></i>Gender</th>
-                            <th><i class="fas fa-calendar-check column-icon"></i>Enrollment</th>
-                            <th><i class="fas fa-cogs column-icon"></i>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="s : ${students}">
-                            <td th:text="${s.id}">1</td>
-                            <td th:text="${s.name}">John Doe</td>
-                            <td th:text="${s.email}">john@example.com</td>
-                            <td th:text="${s.course}">Computer Science</td>
-                            <td th:text="${s.phoneNumber}"></td>
-                            <td th:text="${s.dateOfBirth}"></td>
-                            <td th:text="${s.address}"></td>
-                            <td th:text="${s.gender}"></td>
-                            <td th:text="${s.enrollmentDate}"></td>
-                            <td>
-                                <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display:inline">
-                                    <button type="submit" class="delete-btn">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <h1 class="welcome-title">Student Registration<br>Portal</h1>
+            <p class="welcome-subtitle">
+                Your gateway to academic excellence. Register, manage, and track 
+                student enrollments seamlessly in one place.
+            </p>
+            <button class="enter-btn" id="enterBtn" onclick="enterPortal()">
+                <span>Enter Portal</span>
+                <i class="fas fa-arrow-right arrow-icon"></i>
+            </button>
+
+            <div class="welcome-stats">
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Secure</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Available</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">Fast</div>
+                    <div class="stat-label">Registration</div>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- ========== MAIN APPLICATION ========== -->
+    <div id="main-app">
+        <div class="app-bg">
+            <div class="bg-orb bg-orb-1"></div>
+            <div class="bg-orb bg-orb-2"></div>
+        </div>
+        <div class="grid-overlay"></div>
+
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="nav-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <span class="nav-title">StudentReg</span>
+            </div>
+            <div class="nav-badge">
+                <i class="fas fa-circle"></i> System Online
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-container">
+            <div class="page-header animate-in">
+                <h1>Register <span class="gradient-text">New Student</span></h1>
+                <p>Fill in the details below to enroll a new student into the system.</p>
+            </div>
+
+            <div class="content-grid">
+                <!-- Registration Form -->
+                <div class="form-card animate-in">
+                    <div class="form-card-header">
+                        <div class="form-card-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div>
+                            <h2>Student Details</h2>
+                            <p>Fields marked with * are required</p>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/register}" th:object="${student}" method="post" id="studentRegistrationForm">
+                        <div class="form-group">
+                            <label for="name" class="form-label required">Full Name</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="name" th:field="*{name}" placeholder="e.g. John Doe" required />
+                            </div>
+                            <span class="error-message" id="name-error">Please enter your full name.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label required">Email Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" th:field="*{email}" placeholder="e.g. john@example.com" required />
+                            </div>
+                            <span class="error-message" id="email-error">Please enter a valid email address.</span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="course" class="form-label required">Course</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-book-open"></i>
+                                <input type="text" id="course" th:field="*{course}" placeholder="e.g. Computer Science" required />
+                            </div>
+                            <span class="error-message" id="course-error">Please enter the course name.</span>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phoneNumber" class="form-label">Phone Number</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-phone"></i>
+                                    <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" placeholder="+1 234 567 890" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="gender" class="form-label">Gender</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-venus-mars"></i>
+                                    <select id="gender" th:field="*{gender}">
+                                        <option value="">Select...</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar"></i>
+                                    <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="enrollmentDate" class="form-label">Enrollment Date</label>
+                                <div class="input-wrapper">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <input type="date" id="enrollmentDate" th:field="*{enrollmentDate}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address" class="form-label">Address</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <input type="text" id="address" th:field="*{address}" placeholder="123 Street, City, Country" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="submit-btn">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>Register Student</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-section animate-in">
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-header-left">
+                                <div class="table-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <h2>Registered Students</h2>
+                                    <p>Manage enrolled students</p>
+                                </div>
+                            </div>
+                            <span class="student-count">
+                                <i class="fas fa-database" style="margin-right:6px; color:var(--accent);"></i> Records
+                            </span>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(students)}">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <h3>No Students Yet</h3>
+                                <p>Register your first student using the form on the left.</p>
+                            </div>
+                        </div>
+
+                        <div th:if="${!#lists.isEmpty(students)}">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Course</th>
+                                            <th>Phone</th>
+                                            <th>DOB</th>
+                                            <th>Address</th>
+                                            <th>Gender</th>
+                                            <th>Enrolled</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="s : ${students}">
+                                            <td th:text="${s.id}">1</td>
+                                            <td class="td-name" th:text="${s.name}">John Doe</td>
+                                            <td class="td-email" th:text="${s.email}">john@example.com</td>
+                                            <td><span class="td-course" th:text="${s.course}">CS</span></td>
+                                            <td th:text="${s.phoneNumber}">-</td>
+                                            <td th:text="${s.dateOfBirth}">-</td>
+                                            <td th:text="${s.address}">-</td>
+                                            <td th:text="${s.gender}">-</td>
+                                            <td th:text="${s.enrollmentDate}">-</td>
+                                            <td>
+                                                <form th:action="@{/delete/{id}(id=${s.id})}" method="post" style="display:inline">
+                                                    <button type="submit" class="delete-btn">
+                                                        <i class="fas fa-trash-alt"></i> Delete
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Welcome to the portal!</span>
+    </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const registrationForm = document.getElementById('studentRegistrationForm');
-            const nameInput = document.getElementById('name');
-            const emailInput = document.getElementById('email');
-            const courseInput = document.getElementById('course');
+        // ========== PARTICLES ANIMATION ==========
+        (function initParticles() {
+            const canvas = document.getElementById('particlesCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let animationId;
 
-            const nameError = document.getElementById('name-error');
-            const emailError = document.getElementById('email-error');
-            const courseError = document.getElementById('course-error');
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
 
-            function validateInput(inputElement, errorElement, pattern = null, message = '') {
-                const value = inputElement.value.trim();
-                let isValid = true;
+            function createParticle() {
+                return {
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    speedX: (Math.random() - 0.5) * 0.5,
+                    speedY: (Math.random() - 0.5) * 0.5,
+                    opacity: Math.random() * 0.5 + 0.1
+                };
+            }
+
+            function init() {
+                resize();
+                particles = [];
+                const count = Math.min(80, Math.floor((canvas.width * canvas.height) / 15000));
+                for (let i = 0; i < count; i++) {
+                    particles.push(createParticle());
+                }
+            }
+
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                particles.forEach(function(p, i) {
+                    p.x += p.speedX;
+                    p.y += p.speedY;
+
+                    if (p.x < 0) p.x = canvas.width;
+                    if (p.x > canvas.width) p.x = 0;
+                    if (p.y < 0) p.y = canvas.height;
+                    if (p.y > canvas.height) p.y = 0;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(148, 163, 184, ' + p.opacity + ')';
+                    ctx.fill();
+
+                    // Draw lines between nearby particles
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = p.x - particles[j].x;
+                        const dy = p.y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(p.x, p.y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = 'rgba(148, 163, 184, ' + (0.08 * (1 - dist / 120)) + ')';
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
+                    }
+                });
+
+                animationId = requestAnimationFrame(drawParticles);
+            }
+
+            window.addEventListener('resize', function() {
+                resize();
+            });
+
+            init();
+            drawParticles();
+
+            // Stop particles when welcome screen is hidden
+            window.stopParticles = function() {
+                cancelAnimationFrame(animationId);
+            };
+        })();            // ========== ENTER PORTAL ==========
+        function enterPortal() {
+            var welcomeScreen = document.getElementById('welcome-screen');
+            var mainApp = document.getElementById('main-app');
+            var toast = document.getElementById('toast');
+
+            sessionStorage.setItem('portalEntered', 'true');
+            welcomeScreen.classList.add('hide');
+
+            setTimeout(function() {
+                mainApp.classList.add('show');
+                window.stopParticles();
+            }, 400);
+
+            setTimeout(function() {
+                welcomeScreen.style.display = 'none';
+            }, 900);
+
+            // Show welcome toast
+            setTimeout(function() {
+                toast.classList.add('show');
+                setTimeout(function() {
+                    toast.classList.remove('show');
+                }, 3000);
+            }, 1200);
+        }
+
+        // Auto-skip welcome screen if already entered this session
+        if (sessionStorage.getItem('portalEntered')) {
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('main-app').classList.add('show');
+            if (window.stopParticles) window.stopParticles();
+        }
+
+        // ========== FORM VALIDATION ==========
+        document.addEventListener('DOMContentLoaded', function() {
+            var registrationForm = document.getElementById('studentRegistrationForm');
+            var nameInput = document.getElementById('name');
+            var emailInput = document.getElementById('email');
+            var courseInput = document.getElementById('course');
+
+            var nameError = document.getElementById('name-error');
+            var emailError = document.getElementById('email-error');
+            var courseError = document.getElementById('course-error');
+
+            function validateInput(inputElement, errorElement, pattern, message) {
+                var value = inputElement.value.trim();
+                var isValid = true;
 
                 if (inputElement.required && value === '') {
                     isValid = false;
@@ -439,7 +1337,9 @@
                     errorElement.style.display = 'block';
                 } else {
                     inputElement.classList.remove('is-invalid');
-                    inputElement.classList.add('is-valid');
+                    if (value !== '') {
+                        inputElement.classList.add('is-valid');
+                    }
                     errorElement.style.display = 'none';
                 }
 
@@ -447,9 +1347,9 @@
             }
 
             function handleFormSubmit(event) {
-                const isNameValid = validateInput(nameInput, nameError, null, 'Please enter your full name.');
-                const isEmailValid = validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.');
-                const isCourseValid = validateInput(courseInput, courseError, null, 'Please enter the course name.');
+                var isNameValid = validateInput(nameInput, nameError, null, 'Please enter your full name.');
+                var isEmailValid = validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.');
+                var isCourseValid = validateInput(courseInput, courseError, null, 'Please enter the course name.');
 
                 if (!isNameValid || !isEmailValid || !isCourseValid) {
                     event.preventDefault();
@@ -457,9 +1357,21 @@
             }
 
             registrationForm.addEventListener('submit', handleFormSubmit);
-            nameInput.addEventListener('input', () => validateInput(nameInput, nameError, null, 'Please enter your full name.'));
-            emailInput.addEventListener('input', () => validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.'));
-            courseInput.addEventListener('input', () => validateInput(courseInput, courseError, null, 'Please enter the course name.'));
+            nameInput.addEventListener('input', function() { validateInput(nameInput, nameError, null, 'Please enter your full name.'); });
+            emailInput.addEventListener('input', function() { validateInput(emailInput, emailError, /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address.'); });
+            courseInput.addEventListener('input', function() { validateInput(courseInput, courseError, null, 'Please enter the course name.'); });
+
+            // Add subtle focus animation to form groups
+            var inputs = document.querySelectorAll('.input-wrapper input, .input-wrapper select');
+            inputs.forEach(function(input) {
+                input.addEventListener('focus', function() {
+                    this.closest('.form-group').style.transform = 'translateX(4px)';
+                    this.closest('.form-group').style.transition = 'transform 0.3s ease';
+                });
+                input.addEventListener('blur', function() {
+                    this.closest('.form-group').style.transform = 'translateX(0)';
+                });
+            });
         });
     </script>
 </body>
