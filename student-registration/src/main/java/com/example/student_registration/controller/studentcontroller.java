@@ -38,5 +38,7 @@ public class studentcontroller {
             repo.deleteById(id);
         }
         return "redirect:/";
+
+     
     }
 }
